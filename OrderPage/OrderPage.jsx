@@ -28,7 +28,23 @@ const OrderPage = () => {
   const [_size, setSize] = useState("S");
   const [toppings, setToppings] = useState([]);
   const [quantity, setQuantity] = useState(1);
+  const [infoUser, setInfoUser] = useState(null);
 
+  useEffect(() => {
+    axiosClient
+      .get("/auth/info", {
+        withCredentials: true,
+      })
+      .then((res) => {
+        setInfoUser({
+          fullname: res.data.result.fullname,
+          picture: res.data.result.picture,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
   useEffect(() => {
     axiosClient.get(`product/getProductById?id=${product_id}`).then((res) => {
       console.log(res.data);
@@ -56,7 +72,7 @@ const OrderPage = () => {
   }
   return (
     <>
-    <Navbar/>
+      <Navbar userInfo={infoUser} />
       <div
         className="min-h-screen bg-[#f7ede2]"
         style={{ paddingTop: NAV_HEIGHT }}

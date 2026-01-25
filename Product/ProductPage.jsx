@@ -1,7 +1,9 @@
 import { motion, AnimatePresence } from "framer-motion";
 import ProductList from "../Components/Components_Header/ProductList";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "../Components/Navbar";
+import { useLocation } from "react-router-dom";
+import axiosClient from "../AxiosClient";
 const categories = [
   { key: "", label: "Tất cả" },
   { key: "coffee", label: "Cà phê" },
@@ -23,9 +25,26 @@ const ProductPage = () => {
     "page_before",
     window.location.pathname + window.location.search,
   );
+  const [infoUser, setInfoUser] = useState(null);
+
+  useEffect(() => {
+    axiosClient
+      .get("/auth/info", {
+        withCredentials: true,
+      })
+      .then((res) => {
+        setInfoUser({
+          fullname: res.data.result.fullname,
+          picture: res.data.result.picture,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
   return (
     <>
-      <Navbar />
+      <Navbar userInfo={infoUser} />
       <div className="min-h-screen bg-[#faf7f2]">
         {/* 🌿 HERO */}
         <section className="relative pt-28 pb-20 text-center">

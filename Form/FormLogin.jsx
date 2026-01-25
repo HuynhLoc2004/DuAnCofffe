@@ -38,10 +38,16 @@ const FormLogin = () => {
         withCredentials: true,
       })
       .then((res) => {
-        if (res.data.statusCode == 404) {
+        if (res.data.statusCode == 400) {
+          alert(res.data.message);
+        } else if (res.data.statusCode == 404) {
           alert(res.data.message);
         } else {
-          navigate(localStorage.getItem("page_before"));
+          navigate(localStorage.getItem("page_before"), {
+            state: {
+              statusCode: res.data.statusCode,
+            },
+          });
         }
       })
       .catch((err) => {

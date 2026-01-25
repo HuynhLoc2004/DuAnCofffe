@@ -14,7 +14,8 @@ import StaggeredMenu from "../component/StaggeredMenu";
 import { TfiClose } from "react-icons/tfi";
 import axiosClient from "../AxiosClient";
 import debounce from "lodash/debounce";
-const Navbar = () => {
+import { RxAvatar } from "react-icons/rx";
+const Navbar = ({ userInfo }) => {
   const menus = ["Trang chủ", "Orders", "Tin tức", "VIP", "Liên hệ"];
   const menus_drops = ["Cafe", "Trà sữa", "Cake", "Americano"];
   const text = "Nhập món bạn cần tìm...";
@@ -81,7 +82,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="flex justify-between md:justify-around px-2 min-h-[50px] items-center font-extrabold flex-wrap   w-full  fixed  top-0 z-50 bg-white/30 backdrop-blur-md">
+      <nav className="flex justify-between md:justify-around px-2 h-[56px] items-center font-extrabold w-full fixed top-0 z-50 bg-white/30 backdrop-blur-md">
         <div id="logo" className="shrink-0 bg-transparent">
           <Link to={"/"}>
             <img
@@ -164,13 +165,34 @@ const Navbar = () => {
               })}
           </div>
         </div>
-        <div id="user" className="flex gap-x-2 relative">
+        <div id="user" className="flex gap-x-2 items-center relative">
           <Link className="hidden md:block">
             <BsCart />
           </Link>
-          <Link to={"/login"} className="hidden md:block">
-            <FaRegUser />
+          <Link
+            to={userInfo ? "/profile" : "/login"}
+            className="hidden md:block"
+          >
+            {!userInfo ? (
+              <FaRegUser className="text-lg" />
+            ) : userInfo.picture ? (
+              <img
+                src={userInfo.picture}
+                alt="avatar"
+                className="h-8 w-8 rounded-full object-cover"
+              />
+            ) : (
+              <RxAvatar className="text-lg" />
+            )}
           </Link>
+
+          {userInfo && userInfo.fullname ? (
+            <span className="text-sm leading-none whitespace-nowrap">
+              {userInfo.fullname}
+            </span>
+          ) : (
+            ""
+          )}
           <CiMenuBurger
             className={`md:hidden ${
               openbarMenu ? "hidden" : "block"

@@ -57,6 +57,11 @@ const FormRegister = () => {
         return;
       }
     }
+    if (fullName == "") {
+      alert("Tên không được bỏ trống");
+      return;
+    } else {
+    }
 
     if (phone == "") {
     } else {
@@ -89,11 +94,11 @@ const FormRegister = () => {
     }
     const DataRegistry = {
       account: valueUseraccounnt.trim(),
-      password: password != "" ? password : null,
-      email: email.trim() != "" ? email : null,
-      phone: phone.trim() != "" ? phone : null,
-      fullname: fullName.trim() != "" ? fullName : null,
-      date: birthdate != "" ? birthdate : null,
+      password: password.trim() !== "" ? password : null,
+      email: email.trim() !== "" ? email.trim() : null,
+      phone: phone.trim() !== "" ? phone.trim() : null,
+      fullname: fullName.trim() !== "" ? fullName.trim() : null,
+      date: birthdate !== "" ? birthdate : null,
     };
 
     axiosClient
@@ -176,19 +181,6 @@ const FormRegister = () => {
 
         {/* ===== 3 dòng cuối ===== */}
 
-        {/* Số điện thoại */}
-        <div className="relative">
-          <CiPhone className="absolute top-2 left-2 text-gray-500" />
-          <input
-            type="tel"
-            className="border pl-8 h-[32px] w-[260px] rounded-lg outline-none placeholder:text-[12px]"
-            placeholder="Số điện thoại (tùy chọn)"
-            onChange={handlePhone}
-            value={phone}
-          />
-          <p className="text-red-600 text-[12px] mt-0.5">* Không bắt buộc</p>
-        </div>
-
         {/* Họ và tên */}
         <div className="relative">
           <VscAccount className="absolute top-2 left-2 text-gray-500" />
@@ -198,6 +190,18 @@ const FormRegister = () => {
             placeholder="Họ và tên (tùy chọn)"
             onChange={handleFullName}
             value={fullName}
+          />
+          <p className="text-red-600 text-[12px] mt-0.5">*Bắt buộc</p>
+        </div>
+        {/* Số điện thoại */}
+        <div className="relative">
+          <CiPhone className="absolute top-2 left-2 text-gray-500" />
+          <input
+            type="tel"
+            className="border pl-8 h-[32px] w-[260px] rounded-lg outline-none placeholder:text-[12px]"
+            placeholder="Số điện thoại (tùy chọn)"
+            onChange={handlePhone}
+            value={phone}
           />
           <p className="text-red-600 text-[12px] mt-0.5">* Không bắt buộc</p>
         </div>
