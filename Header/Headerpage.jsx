@@ -7,9 +7,13 @@ import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 const HeaderPage = () => {
+  localStorage.setItem(
+    "page_before",
+    window.location.pathname + window.location.search,
+  );
   return (
     <div className="text-[#3B2F2F]">
-      <Navbar/>
+      <Navbar />
       <HeaderHero />
       <Marquee />
       <Content />

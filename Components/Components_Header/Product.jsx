@@ -6,6 +6,10 @@ const Product = ({ ProductItem }) => {
 
   const handleOrder = (e) => {
     e.preventDefault();
+    localStorage.setItem(
+      "page_before",
+      window.location.pathname + window.location.search,
+    );
     navigate(`/order/?category=${ProductItem.category}&id=${ProductItem.id}`);
   };
 

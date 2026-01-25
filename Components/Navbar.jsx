@@ -168,7 +168,7 @@ const Navbar = () => {
           <Link className="hidden md:block">
             <BsCart />
           </Link>
-          <Link to={"/register"} className="hidden md:block">
+          <Link to={"/login"} className="hidden md:block">
             <FaRegUser />
           </Link>
           <CiMenuBurger

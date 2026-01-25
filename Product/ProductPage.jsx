@@ -19,7 +19,10 @@ const urlApi = {
 
 const ProductPage = () => {
   const [option, setOption] = useState("");
-
+  localStorage.setItem(
+    "page_before",
+    window.location.pathname + window.location.search,
+  );
   return (
     <>
       <Navbar />
