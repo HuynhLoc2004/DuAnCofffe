@@ -1,16 +1,44 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-
+import axiosClient from "../../AxiosClient";
+import {
+  getAccessToken,
+  setAccessToken,
+} from "../../ManagerAccessToken/ManagerAccessToken";
+import { useState } from "react";
 const Product = ({ ProductItem }) => {
   const navigate = useNavigate();
 
   const handleOrder = (e) => {
-    e.preventDefault();
-    localStorage.setItem(
-      "page_before",
-      window.location.pathname + window.location.search,
-    );
-    navigate(`/order/?category=${ProductItem.category}&id=${ProductItem.id}`);
+    axiosClient
+      .get("/auth/info", {
+        headers: {
+          Authorization: `Bearer ${getAccessToken()}`,
+        },
+      })
+      .then((res) => {
+        navigate(
+          `/order/?category=${ProductItem.category}&id=${ProductItem.id}`,
+        );
+      })
+      .catch((err) => {
+        if (err.status == 401) {
+          axiosClient
+            .get("/auth/refresh_token", {
+              withCredentials: true,
+            })
+            .then((res) => {
+              if (res.data.statusCode == 200) {
+                setAccessToken(res.data.result.accessToken);
+              }
+            })
+            .catch((err) => {
+              if (err.status == 401) {
+                navigate("/login");
+              }
+            });
+        }
+      });
   };
 
   return (

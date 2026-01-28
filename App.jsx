@@ -11,9 +11,11 @@ import PaymentSuccess from "./Components/Paymentsuccess/PaymentSuccess";
 import ScrollToTop from "./Scolltoppage";
 import Authentication from "./assets/Authentication/Authentication";
 import FormLogin from "./Form/FormLogin";
+import LoadingPage from "./LoadingPage/LoadingPage";
+
 function App() {
   return (
-    <div> 
+    <div>
       <ScrollToTop />
       <Routes>
         <Route element={<LayoutMain />}>
@@ -23,9 +25,10 @@ function App() {
         </Route>
         <Route path="/authentication" element={<Authentication />}></Route>
         <Route path="registry" element={<FormRegister />}></Route>
-        <Route path= '/login' element={<FormLogin/>}></Route>
+        <Route path="/login" element={<FormLogin />}></Route>
         <Route path="/checkout" element={<CheckoutPage />} />
         <Route path="/payment-success" element={<PaymentSuccess />} />
+        <Route path="/loadingpage" element={<LoadingPage />}></Route>
       </Routes>
     </div>
   );

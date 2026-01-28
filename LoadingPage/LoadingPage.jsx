@@ -1,19 +1,12 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axiosClient from "../../AxiosClient";
 import { IoReloadSharp } from "react-icons/io5";
-const Authentication = () => {
+const LoadingPage = () => {
   const navigate = useNavigate();
   useEffect(() => {
     setTimeout(() => {
-      axiosClient
-        .get("/auth/google", {
-          withCredentials: true,
-        })
-        .then((res) => {
-          navigate(localStorage.getItem("page_before"));
-        });
-    }, 100);
+      navigate(localStorage.getItem("page_before"));
+    }, 150);
   }, []);
   return (
     <div className="flex justify-center items-center h-screen flex-col">
@@ -23,4 +16,4 @@ const Authentication = () => {
   );
 };
 
-export default Authentication;
+export default LoadingPage;

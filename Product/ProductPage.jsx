@@ -4,6 +4,10 @@ import { useState, useEffect } from "react";
 import Navbar from "../Components/Navbar";
 import { useLocation } from "react-router-dom";
 import axiosClient from "../AxiosClient";
+import {
+  getAccessToken,
+  setAccessToken,
+} from "../ManagerAccessToken/ManagerAccessToken";
 const categories = [
   { key: "", label: "Tất cả" },
   { key: "coffee", label: "Cà phê" },
@@ -26,11 +30,11 @@ const ProductPage = () => {
     window.location.pathname + window.location.search,
   );
   const [infoUser, setInfoUser] = useState(null);
-
+  const [accessToken, setAccesstoken] = useState(getAccessToken());
   useEffect(() => {
     axiosClient
       .get("/auth/info", {
-        withCredentials: true,
+        headers: { Authorization: `Bearer ${accessToken}` },
       })
       .then((res) => {
         setInfoUser({
@@ -39,9 +43,20 @@ const ProductPage = () => {
         });
       })
       .catch((err) => {
-        console.log(err);
+        if (err.status == 401) {
+          axiosClient
+            .get("/auth/refresh_token", {
+              withCredentials: true,
+            })
+            .then((res) => {
+              console.log(res);
+              setAccessToken(res.data.result.accessToken);
+              setAccesstoken(res.data.result.accessToken);
+            });
+        }
       });
-  }, []);
+  }, [accessToken]);
+
   return (
     <>
       <Navbar userInfo={infoUser} />

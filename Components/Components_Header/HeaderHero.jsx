@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { FiArrowDown } from "react-icons/fi";
+import { Link } from "react-router-dom";
 
 const HeaderHero = () => {
   return (
@@ -38,9 +39,11 @@ const HeaderHero = () => {
           transition={{ delay: 0.5 }}
           className="mt-10 flex gap-4"
         >
-          <button className="px-8 py-3 rounded-full bg-[#d6a46c] text-black font-semibold hover:bg-[#c08b52] transition">
-            Xem menu
-          </button>
+          <Link to="/product">
+            <button className="px-8 py-3 rounded-full bg-[#d6a46c] text-black font-semibold hover:bg-[#c08b52] hover:cursor-pointer transition">
+              Xem menu
+            </button>
+          </Link>
           <button className="px-8 py-3 rounded-full border border-[#d6a46c] text-[#d6a46c] hover:bg-[#d6a46c]/10 transition">
             Khám phá
           </button>
@@ -49,7 +52,7 @@ const HeaderHero = () => {
 
       {/* scroll hint */}
       <motion.div
-        animate={{ y: [0, 10, 0] }} 
+        animate={{ y: [0, 10, 0] }}
         transition={{ duration: 2, repeat: Infinity }}
         className="absolute bottom-6 left-1/2 -translate-x-1/2 text-[#f7ede2] flex flex-col items-center"
       ></motion.div>

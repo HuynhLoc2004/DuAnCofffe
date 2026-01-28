@@ -11,7 +11,10 @@ import axiosClient from "../AxiosClient";
 import Navbar from "../Components/Navbar";
 
 const NAV_HEIGHT = 72;
-
+import {
+  getAccessToken,
+  setAccessToken,
+} from "../ManagerAccessToken/ManagerAccessToken";
 const SIZE_PRICE = {
   S: 0,
   M: 5000,
@@ -29,11 +32,18 @@ const OrderPage = () => {
   const [toppings, setToppings] = useState([]);
   const [quantity, setQuantity] = useState(1);
   const [infoUser, setInfoUser] = useState(null);
+  const [accessToken, setAccesstoken] = useState(getAccessToken());
 
+  useEffect(() => {
+    localStorage.setItem(
+      "page_before",
+      window.location.pathname + window.location.search,
+    );
+  });
   useEffect(() => {
     axiosClient
       .get("/auth/info", {
-        withCredentials: true,
+        headers: { Authorization: `Bearer ${accessToken}` },
       })
       .then((res) => {
         setInfoUser({
@@ -42,9 +52,19 @@ const OrderPage = () => {
         });
       })
       .catch((err) => {
-        console.log(err);
+        if (err.status == 401) {
+          axiosClient
+            .get("/auth/refresh_token", {
+              withCredentials: true,
+            })
+            .then((res) => {
+              console.log(res);
+              setAccessToken(res.data.result.accessToken);
+              setAccesstoken(res.data.result.accessToken);
+            });
+        }
       });
-  }, []);
+  }, [accessToken]);
   useEffect(() => {
     axiosClient.get(`product/getProductById?id=${product_id}`).then((res) => {
       console.log(res.data);

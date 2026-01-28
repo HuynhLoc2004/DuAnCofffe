@@ -15,8 +15,9 @@ import { TfiClose } from "react-icons/tfi";
 import axiosClient from "../AxiosClient";
 import debounce from "lodash/debounce";
 import { RxAvatar } from "react-icons/rx";
+import { clearAccessToken } from "../ManagerAccessToken/ManagerAccessToken";
 const Navbar = ({ userInfo }) => {
-  const menus = ["Trang chủ", "Orders", "Tin tức", "VIP", "Liên hệ"];
+  const menus = ["Trang chủ", "Sản phẩm", "Tin tức", "VIP", "Liên hệ"];
   const menus_drops = ["Cafe", "Trà sữa", "Cake", "Americano"];
   const text = "Nhập món bạn cần tìm...";
   const [placeholder, setPlaceholder] = useState("");
@@ -25,6 +26,7 @@ const Navbar = ({ userInfo }) => {
   const [openbarMenu, setOpenbarMenu] = useState(false);
   const [itemSearch, setItemSeach] = useState([]);
   const [focus, setFocus] = useState(false);
+  const [showAvatarMenu, setShowAvatarMenu] = useState(false);
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const HandlevalueInput = (e) => {
@@ -79,6 +81,20 @@ const Navbar = ({ userInfo }) => {
     setValueSearch("");
     setFocus(false);
   }, [pathname]);
+
+  const handleLogout = () => {
+    axiosClient
+      .get("/auth/logout", {
+        withCredentials: true,
+      })
+      .then((res) => {
+        console.log(res);
+        if (res.data.statusCode == 200) {
+          clearAccessToken();
+          navigate("/loadingPage");
+        }
+      });
+  };
 
   return (
     <>
@@ -169,22 +185,60 @@ const Navbar = ({ userInfo }) => {
           <Link className="hidden md:block">
             <BsCart />
           </Link>
-          <Link
-            to={userInfo ? "/profile" : "/login"}
-            className="hidden md:block"
-          >
-            {!userInfo ? (
-              <FaRegUser className="text-lg" />
-            ) : userInfo.picture ? (
-              <img
-                src={userInfo.picture}
-                alt="avatar"
-                className="h-8 w-8 rounded-full object-cover"
-              />
-            ) : (
-              <RxAvatar className="text-lg" />
+          <div className="hidden md:flex relative items-center">
+            <button
+              onClick={() => setShowAvatarMenu(!showAvatarMenu)}
+              onMouseEnter={() => userInfo && setShowAvatarMenu(true)}
+              className="hover:scale-110 transform transition-transform duration-200 ease-in-out inline-flex items-center justify-center"
+            >
+              {!userInfo ? (
+                <Link to="/login">
+                  <FaRegUser className="text-lg" />
+                </Link>
+              ) : userInfo.picture ? (
+                <img
+                  src={userInfo.picture}
+                  alt="avatar"
+                  className="w-[18px] rounded-full object-cover cursor-pointer"
+                />
+              ) : (
+                <RxAvatar className="text-lg cursor-pointer" />
+              )}
+            </button>
+
+            {userInfo && (
+              <div
+                className={`absolute right-0 top-full mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 transform transition-all duration-200 ease-out z-50 ${
+                  showAvatarMenu
+                    ? "opacity-100 translate-y-0 scale-100"
+                    : "opacity-0 -translate-y-2 scale-95 pointer-events-none"
+                }`}
+                onMouseEnter={() => setShowAvatarMenu(true)}
+                onMouseLeave={() => setShowAvatarMenu(false)}
+              >
+                <Link
+                  to="/profile"
+                  className="block px-4 py-2 hover:bg-gray-100 first:rounded-t-md transition-colors hover:cursor-pointer"
+                  onClick={() => setShowAvatarMenu(false)}
+                >
+                  <span className="font-medium">Hồ sơ</span>
+                </Link>
+                <Link
+                  to="/change-password"
+                  className="block px-4 py-2 hover:bg-gray-100 transition-colors hover:cursor-pointer"
+                  onClick={() => setShowAvatarMenu(false)}
+                >
+                  <span className="font-medium">Đổi mật khẩu</span>
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="w-full text-left px-4 py-2 hover:bg-gray-100 last:rounded-b-md transition-colors border-t hover:cursor-pointer"
+                >
+                  <span className="font-medium text-red-600">Đăng xuất</span>
+                </button>
+              </div>
             )}
-          </Link>
+          </div>
 
           {userInfo && userInfo.fullname ? (
             <span className="text-sm leading-none whitespace-nowrap">

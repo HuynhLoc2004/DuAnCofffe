@@ -1,4 +1,4 @@
-import React, { use, useState } from "react";
+import React, { createContext, use, useState } from "react";
 import { VscAccount } from "react-icons/vsc";
 import { TbLockPassword } from "react-icons/tb";
 import { CiPhone } from "react-icons/ci";
@@ -7,10 +7,16 @@ import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa6";
 import { Link, useNavigate } from "react-router-dom";
 import axiosClient from "../AxiosClient";
+import {
+  setAccessToken,
+  getAccessToken,
+  clearAccessToken,
+} from "../ManagerAccessToken/ManagerAccessToken";
 const FormLogin = () => {
   const navigate = useNavigate();
   const [valueUseraccounnt, setValueUseraccount] = useState("");
   const [password, setPassword] = useState("");
+
   const handleUserAccount = (e) => {
     setValueUseraccount(e.target.value);
   };
@@ -43,6 +49,8 @@ const FormLogin = () => {
         } else if (res.data.statusCode == 404) {
           alert(res.data.message);
         } else {
+          setAccessToken(res.data.result.accessToken);
+          console.log(res.data.result.accessToken);
           navigate(localStorage.getItem("page_before"), {
             state: {
               statusCode: res.data.statusCode,
@@ -127,4 +135,5 @@ const FormLogin = () => {
     </form>
   );
 };
+
 export default FormLogin;
