@@ -8,6 +8,7 @@ import {
   getAccessToken,
   setAccessToken,
 } from "../ManagerAccessToken/ManagerAccessToken";
+import { unlogout, logout, getLogout } from "../ManagerLogout/ManagerLogout";
 const categories = [
   { key: "", label: "Tất cả" },
   { key: "coffee", label: "Cà phê" },
@@ -34,7 +35,10 @@ const ProductPage = () => {
   useEffect(() => {
     axiosClient
       .get("/auth/info", {
-        headers: { Authorization: `Bearer ${accessToken}` },
+        headers: {
+          Authorization: `Bearer ${getAccessToken()}`,
+          withCredentials: getLogout() == 1 ? true : false,
+        },
       })
       .then((res) => {
         setInfoUser({
@@ -49,9 +53,15 @@ const ProductPage = () => {
               withCredentials: true,
             })
             .then((res) => {
-              console.log(res);
+              if (res.data.statusCode == 401) {
+                return;
+              }
+              unlogout();
               setAccessToken(res.data.result.accessToken);
               setAccesstoken(res.data.result.accessToken);
+            })
+            .catch((err) => {
+              console.log(err);
             });
         }
       });

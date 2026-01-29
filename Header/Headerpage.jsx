@@ -11,7 +11,7 @@ import {
   getAccessToken,
   setAccessToken,
 } from "../ManagerAccessToken/ManagerAccessToken";
-
+import { unlogout, logout, getLogout } from "../ManagerLogout/ManagerLogout";
 const HeaderPage = () => {
   localStorage.setItem(
     "page_before",
@@ -20,11 +20,14 @@ const HeaderPage = () => {
   const [infoUser, setInfoUser] = useState(null);
   const location = useLocation();
   const [accessToken, setAccesstoken] = useState(getAccessToken());
-  console.log(infoUser);
+
   useEffect(() => {
     axiosClient
       .get("/auth/info", {
-        headers: { Authorization: `Bearer ${accessToken}` },
+        headers: {
+          Authorization: `Bearer ${getAccessToken()}`,
+          withCredentials: getLogout() == 1 ? true : false,
+        },
       })
       .then((res) => {
         setInfoUser({
@@ -39,6 +42,10 @@ const HeaderPage = () => {
               withCredentials: true,
             })
             .then((res) => {
+              if (res.data.statusCode == 401) {
+                return;
+              }
+              unlogout();
               setAccessToken(res.data.result.accessToken);
               setAccesstoken(res.data.result.accessToken);
             });

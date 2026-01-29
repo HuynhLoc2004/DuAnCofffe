@@ -16,6 +16,7 @@ import axiosClient from "../AxiosClient";
 import debounce from "lodash/debounce";
 import { RxAvatar } from "react-icons/rx";
 import { clearAccessToken } from "../ManagerAccessToken/ManagerAccessToken";
+import { unlogout, logout } from "../ManagerLogout/ManagerLogout";
 const Navbar = ({ userInfo }) => {
   const menus = ["Trang chủ", "Sản phẩm", "Tin tức", "VIP", "Liên hệ"];
   const menus_drops = ["Cafe", "Trà sữa", "Cake", "Americano"];
@@ -59,7 +60,6 @@ const Navbar = ({ userInfo }) => {
     axiosClient
       .get(`product/getTOpProductbySearch?top=5&searchname=${valuesearch}`)
       .then((res) => {
-        console.log(res.data.result);
         setItemSeach(res.data.result);
       })
       .catch((err) => {
@@ -88,9 +88,9 @@ const Navbar = ({ userInfo }) => {
         withCredentials: true,
       })
       .then((res) => {
-        console.log(res);
         if (res.data.statusCode == 200) {
           clearAccessToken();
+          logout();
           navigate("/loadingPage");
         }
       });

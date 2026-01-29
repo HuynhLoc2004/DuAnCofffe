@@ -9,6 +9,7 @@ import QuantitySelector from "../Components/ComponentOrder/QuantitySelector";
 import OrderForm from "../Components/ComponentOrder/OrderForm";
 import axiosClient from "../AxiosClient";
 import Navbar from "../Components/Navbar";
+import { unlogout, logout, getLogout } from "../ManagerLogout/ManagerLogout";
 
 const NAV_HEIGHT = 72;
 import {
@@ -33,7 +34,6 @@ const OrderPage = () => {
   const [quantity, setQuantity] = useState(1);
   const [infoUser, setInfoUser] = useState(null);
   const [accessToken, setAccesstoken] = useState(getAccessToken());
-
   useEffect(() => {
     localStorage.setItem(
       "page_before",
@@ -43,7 +43,10 @@ const OrderPage = () => {
   useEffect(() => {
     axiosClient
       .get("/auth/info", {
-        headers: { Authorization: `Bearer ${accessToken}` },
+        headers: {
+          Authorization: `Bearer ${getAccessToken()}`,
+          withCredentials: getLogout() == 1 ? true : false,
+        },
       })
       .then((res) => {
         setInfoUser({
@@ -58,16 +61,19 @@ const OrderPage = () => {
               withCredentials: true,
             })
             .then((res) => {
-              console.log(res);
+              if (res.data.statusCode == 401) {
+                return;
+              }
+              unlogout();
               setAccessToken(res.data.result.accessToken);
               setAccesstoken(res.data.result.accessToken);
             });
         }
       });
   }, [accessToken]);
+
   useEffect(() => {
     axiosClient.get(`product/getProductById?id=${product_id}`).then((res) => {
-      console.log(res.data);
       setProduct(res.data.result);
     });
   }, [product_id]);

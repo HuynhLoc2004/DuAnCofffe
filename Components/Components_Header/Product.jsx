@@ -6,39 +6,46 @@ import {
   setAccessToken,
 } from "../../ManagerAccessToken/ManagerAccessToken";
 import { useState } from "react";
+import { unlogout, logout, getLogout } from "../../ManagerLogout/ManagerLogout";
 const Product = ({ ProductItem }) => {
   const navigate = useNavigate();
 
   const handleOrder = (e) => {
-    axiosClient
-      .get("/auth/info", {
-        headers: {
-          Authorization: `Bearer ${getAccessToken()}`,
-        },
-      })
-      .then((res) => {
-        navigate(
-          `/order/?category=${ProductItem.category}&id=${ProductItem.id}`,
-        );
-      })
-      .catch((err) => {
-        if (err.status == 401) {
-          axiosClient
-            .get("/auth/refresh_token", {
-              withCredentials: true,
-            })
-            .then((res) => {
-              if (res.data.statusCode == 200) {
-                setAccessToken(res.data.result.accessToken);
-              }
-            })
-            .catch((err) => {
-              if (err.status == 401) {
-                navigate("/login");
-              }
-            });
-        }
-      });
+    if (getLogout() == 1) {
+      navigate("/login");
+    } else {
+      axiosClient
+        .get("/auth/info", {
+          headers: {
+            Authorization: `Bearer ${getAccessToken()}`,
+          },
+        })
+        .then((res) => {
+          if (res.data.statusCode == 200) {
+            navigate(
+              `/order/?category=${ProductItem.category}&id=${ProductItem.id}`,
+            );
+          }
+        })
+        .catch((err) => {
+          if (err.status == 401) {
+            axiosClient
+              .get("/auth/refresh_token", {
+                withCredentials: true,
+              })
+              .then((res) => {
+                if (res.data.statusCode == 200) {
+                  setAccessToken(res.data.result.accessToken);
+                }
+              })
+              .catch((err) => {
+                if (err.status == 401) {
+                  navigate("/login");
+                }
+              });
+          }
+        });
+    }
   };
 
   return (

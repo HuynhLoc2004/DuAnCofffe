@@ -12,6 +12,7 @@ import {
   getAccessToken,
   clearAccessToken,
 } from "../ManagerAccessToken/ManagerAccessToken";
+import { unlogout, logout } from "../ManagerLogout/ManagerLogout";
 const FormLogin = () => {
   const navigate = useNavigate();
   const [valueUseraccounnt, setValueUseraccount] = useState("");
@@ -50,7 +51,7 @@ const FormLogin = () => {
           alert(res.data.message);
         } else {
           setAccessToken(res.data.result.accessToken);
-          console.log(res.data.result.accessToken);
+          unlogout();
           navigate(localStorage.getItem("page_before"), {
             state: {
               statusCode: res.data.statusCode,

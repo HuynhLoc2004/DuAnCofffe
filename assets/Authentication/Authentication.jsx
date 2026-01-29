@@ -2,17 +2,20 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosClient from "../../AxiosClient";
 import { IoReloadSharp } from "react-icons/io5";
+import {
+  getAccessToken,
+  setAccessToken,
+} from "../../ManagerAccessToken/ManagerAccessToken";
+import { useSearchParams } from "react-router-dom";
 const Authentication = () => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const accesstk = searchParams.get("info");
   useEffect(() => {
     setTimeout(() => {
-      axiosClient
-        .get("/auth/google", {
-          withCredentials: true,
-        })
-        .then((res) => {
-          navigate(localStorage.getItem("page_before"));
-        });
+      console.log(accesstk);
+      setAccessToken(accesstk);
+      navigate(localStorage.getItem("page_before"));
     }, 100);
   }, []);
   return (
