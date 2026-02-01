@@ -5,11 +5,11 @@ import {
   getAccessToken,
   setAccessToken,
 } from "../../ManagerAccessToken/ManagerAccessToken";
-import { useState } from "react";
-import { unlogout, logout, getLogout } from "../../ManagerLogout/ManagerLogout";
+import { getLogout } from "../../ManagerLogout/ManagerLogout";
+
 const Product = ({ ProductItem }) => {
   const navigate = useNavigate();
-
+  console.log(getAccessToken());
   const handleOrder = (e) => {
     if (getLogout() == 1) {
       navigate("/login");
@@ -69,8 +69,11 @@ const Product = ({ ProductItem }) => {
       {/* Image */}
       <motion.div
         className="relative z-10 h-[220px] overflow-hidden"
-        whileHover={{ scale: 1.08 }}
-        transition={{ duration: 0.8 }}
+        whileHover={{
+          scale: 1.08,
+          rotateZ: [0, 8, -8, 0],
+          transition: { duration: 1, repeat: Infinity },
+        }}
       >
         <img
           src={ProductItem.img}
@@ -93,15 +96,16 @@ const Product = ({ ProductItem }) => {
       {/* CTA */}
       <motion.button
         onClick={handleOrder}
-        whileHover={{ scale: 1.12 }}
+        whileHover={{ scale: 1.05 }}
         className="
-          absolute bottom-5 left-1/2 -translate-x-1/2
-          px-6 py-2 rounded-full
-          bg-[#3b2a20] text-white text-sm
-          shadow-lg hover:bg-[#c89b6d]
+          absolute bottom-4 left-1/2 -translate-x-1/2
+          px-10 py-2 rounded-full
+          bg-[#3b2a20] text-white text-sm font-medium
+          shadow-lg hover:bg-[#c89b6d] transition
+          whitespace-nowrap
         "
       >
-        Đặt ngay
+        Thêm ngay
       </motion.button>
     </motion.div>
   );

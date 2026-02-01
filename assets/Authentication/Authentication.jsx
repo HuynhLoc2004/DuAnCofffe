@@ -6,6 +6,7 @@ import {
   getAccessToken,
   setAccessToken,
 } from "../../ManagerAccessToken/ManagerAccessToken";
+import { logout, unlogout, getLogout } from "../../ManagerLogout/ManagerLogout";
 import { useSearchParams } from "react-router-dom";
 const Authentication = () => {
   const navigate = useNavigate();
@@ -13,8 +14,8 @@ const Authentication = () => {
   const accesstk = searchParams.get("info");
   useEffect(() => {
     setTimeout(() => {
-      console.log(accesstk);
       setAccessToken(accesstk);
+      unlogout();
       navigate(localStorage.getItem("page_before"));
     }, 100);
   }, []);

@@ -40,7 +40,7 @@ const OrderForm = ({ product, size, toppings, quantity }) => {
 
       <button
         onClick={handleOrder}
-        className="w-full mt-6 py-3 rounded-xl bg-gradient-to-r from-amber-600 to-orange-500 text-white font-semibold hover:scale-105 transition"
+        className="w-full mt-6 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-green-500 text-white font-semibold hover:scale-105 transition"
       >
         Đặt hàng ngay
       </button>
